@@ -1,0 +1,1247 @@
+\documentclass[a4paper]{report}   % list options between brackets
+\setcounter{secnumdepth}{0}
+\usepackage{listings, hyperref}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amsfonts}   
+\usepackage{amssymb}
+% list packages between braces
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},1
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+% type user-defined commands here
+
+\addtolength{\oddsidemargin}{-.875in}
+\addtolength{\evensidemargin}{-.875in}
+\addtolength{\textwidth}{2in}
+
+\addtolength{\topmargin}{-.875in}
+\addtolength{\textheight}{1.75in}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\begin{document}
+
+\title{Java OCP Notes}
+\author{Marjan}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\part*{OCA}
+
+\chapter{Java Building Blocks}
+
+\paragraph{Basics}
+
+Java programs are made up of classes. An \textit{Object} is a runtime instance of a class in memory. 
+
+\paragraph{Fields and Methods}
+
+Methods are called functions and procedures in other language, and fields are more generally known as variables. Together these are called members of the class. Variables hold the state of a program, and methods operate on that state.
+
+\lstset{language=Java}
+\paragraph{Example Class}
+
+\begin{lstlisting}
+public class Animal {
+}
+
+public class Animal {
+	String name;
+}
+\end{lstlisting}
+
+String is a class which defines a variable type.
+
+\begin{lstlisting}
+public class Animal {
+	String name;
+	public String getName() {
+		return name;
+	}
+	public void setName(String newName) {
+		name = newName;
+	}
+}
+\end{lstlisting}
+
+A method is an operation that can be called. Public signifies that this methods may be called from other classes. There is then a return type. The return type here is a string and void. Void means that no value at all is being returned. This method requires information be supplied to it from the calling method; this information is called a parameter. The type here is a string and it should expect a string to be passed in and expect nothing to be returned.\\
+
+The full declaration of a method is called a method signature.
+
+\begin{lstlisting}
+public int numberVisitors(int month)
+\end{lstlisting}
+
+\section{comments}
+
+\begin{lstlisting}
+//comment until end of line
+
+/* Multiple
+ * line comment
+ * /
+ 
+/**
+* Javadoc multiple-line comment
+* @author
+*/
+\end{lstlisting}
+
+\section{Classes vs.Files}
+
+Each Java class is defined in its own *.java file. It is usually public, which means any code can call it. Java does not require that the class be public. The following will compile.
+
+\begin{lstlisting}
+class Animal {
+	String name;
+}
+\end{lstlisting}
+
+Two classes can be put in the same files but at most one of these classes can be public. The following is fine. 
+
+\begin{lstlisting}
+public class Animal {
+	private String name;
+}
+
+class Animal2 {
+}
+\end{lstlisting}
+
+If a public class is present then it must match the file name.
+
+\section{Writing a main() Method}
+
+This is where a program will begin its execution. To compile Java code, the file must have the extension .java. The name of the file must match the name of the class. This results in a byte code file by the same name, but with a a .class file name extension. \\
+Byte code consists of the instructions that the JVM knows how to execute. The static keyword binds a method to its class so it can be called by just the class name, as in for, example, Zoo.main().\\
+
+Java doesn't need to create an object to call the main() method. The JVM does this when loading the class name given to it. If a main() method isn't present in the class given. The process will throw an error and terminate. even if a main() method is present, Java will throw an exception if it isn't static. \\
+
+Its good practice to use void for methods that change an objects state. in that sense the main() method changes the program state from started to finished.
+
+main() method's parameter list, represented as an array of java.lang.String objects.
+
+\begin{lstlisting}
+String[] args, String args[] or String... args. 
+\end{lstlisting} 
+
+The variable name args hints that this list contains values that were read in (arguments) when the JVM started. Cannot be resolved to a type. This is either caused by a misspelled or missing import statement.
+
+\section{Package Declarations and Imports}
+
+Logical groupings for classes. * wildcard matches all classes in the package. It doesn't import child packages, fields or methods; it imports only classes. The compiler figures out exactly what is needed. Listing classes which are used allows for more readability.
+
+\begin{lstlisting}
+import java.nio.*; //* only matches class names
+import java.nio.*.*; //Can only have one wild card and it must be at the end
+import java.nio.files.Paths.*;// Cannot import methods only class names
+\end{lstlisting} 
+
+\subsubsection{Naming conflicts}
+
+Imports allow for avoiding packages so that class names do not have to be unique across all of Java. NOTE: that when other imports are present Java will give you a compiler error. To use two Classes with the same name you pick one to use in the import and use the other's fully qualified class name. 
+
+\subsubsection{Creating a new package}
+
+\section{Creating objects}
+
+\subsection*{Constructors}
+
+In order to create a new object input new in front of it.
+
+\begin{lstlisting}
+Random r = new Random();
+
+public class Chick {
+	public Chick() {
+		System.out.println("in constructor");
+	}
+}
+\end{lstlisting}
+
+Two notes. The name of the constructor should match the name of the class and there is no return type for a constructor. The purpose of a constructor is to initialise fields but any code can be placed in there. 
+
+\subsection{Reading and writing Object fields}
+
+It is possible to read and write instance variables directly from the called.
+
+\begin{lstlisting}
+public class Swan {
+	int numberEggs;// instance variable
+	public static void main(String[] args) {
+		Swan mother = new Swan();
+		mother.numberEggs = 1; // set variable
+		System.out.println(mother.numberEggs); //read variable
+	}
+}
+\end{lstlisting}
+
+Can also write to the fields directly on the line declaring them.
+
+\subsection{Initializer Blocks}
+
+Instance initialisers are code blocks which appear outside of a method
+\subsection{Order of initialisation}
+
+
+Field and instance initialiser blocks are run in the order in which they appear in the file. 
+
+The constructor runs after all fields and instance initialiser blocks have run.
+
+\begin{lstlisting}
+public class Chick {
+	private String name = "Fluffy";
+	{ 
+		System.out.println("Setting field");
+	}
+	public Chick() {
+		name = "Tiny";
+		System.out.println("setting constructor");
+	}
+	public static void main(String[] args)
+	{
+		Chick chick = new Chick();
+		System.out.println(chick.name);
+	}
+}
+//The order of this will be
+setting field
+setting constructor
+Tiny
+		
+\end{lstlisting}
+
+Starts with the main() method as that is where Java start execution. Then the constructor of Chick is called. Java then creates a new object. The name is first initialised to fluffy. Next it executes the print statement in the instance initialiser. Once all the fields and instance initialisers have run, Java returns to the constructor. The constructor changes the name to Tiny and then the immediately next line prints a statement. After this the control is retuned to the print statement on line 10.\\
+
+\section{Distinguishing between object References and Primitives}
+
+\subsection{Primitive Type}
+
+There are eight of these. The are the "building blocks" for Java.
+
+\begin{center}
+\begin{tabular}{| c | c | c |}
+ \hline
+ Keyword & Type & Example \\ 
+ \hline
+ boolean & true or false & true \\  
+ byte & 8-bit integral value & 123 \\ 
+ short & 16-bit integral value & 123 \\ 
+ int & 32-bit integral & 123 \\ 
+ long & 64-bit integral value & 123 \\  
+ float & 32-bit floating point value & 123.45f \\ 
+ double & 64-bit floating-point value & 123.456 \\
+ char & 
+ 16-bit Unicode value & 'a' \\ 
+ \hline
+\end{tabular}
+\end{center}
+
+A float requires the letter f following the number so Java know it is a float. Integral types refers to whole numbers. Each numeric type uses twice as many bits as the smaller similar type. When a number is present in code, it is called a literal. Java assumes you are defining an int value with a literal. 
+
+\begin{lstlisting}
+long max = 123234345
+long max = 123234345L // These two will compile the one above will not
+long max = 123234345l	
+long max = 017 //This is octal
+long max = 0xFF //This is hex
+long max = 0b10 //This is binary	
+long max = 1_000_000 //underscores can be used in numeric literals to make them easer to read
+double nums = 1_000_0.0_0000// The underscores cannot be adjacent to the decimal point.
+\end{lstlisting}
+
+\section{Reference types}
+
+Reference types refer to an object. They do not hold the value of the object they refer to. Instead, a reference "points" to an object by storing the memory address where the object is located, i.e a pointer. This cannot be manipulated in Java. A value is assigned to a reference in two ways. can be assigned to another object of the same type. A reference can be assigned to a new object using the new keyword.
+
+\begin{lstlisting}
+today = new java.util.Date();
+greeting = "How are you?";
+\end{lstlisting}
+
+\subsection{Differences between primitives and reference types}
+
+\begin{itemize}
+   \item Reference types can be assigned null and this means that they are currently not assigned an object.
+   \item Primitive types will give you compiler error if you attempt to assign them null.
+   \item Reference types can be used to call methods when they do not point to null.
+   \item Primitives do not have methods.
+   \item All primitive types have lower-case type names, all classes begin with upper-case.
+\end{itemize}
+
+\subsection{Declaring and Initialising Variables}
+
+Multiple variables can be declared an initialised in the same statement.
+\begin{lstlisting}
+String s1, s2;
+String s3 = "yes", s4 = "no";
+\end{lstlisting}
+
+Can declare as many variables as desired as long as they are all of the same type. Any of them or all of those values can be initialised in line.
+
+\section{Identifiers}
+
+Rules to remember. The name must begin with a letter or a the symbol \$ or \_. Subsequent character may also be numbers. You cannot use the same name as Java reserved word, Java is case sensitive though but it is bad practice.\\
+
+In practice method and variable names begin with a lower-case letter followed by CamelCase. Class names begin with an uppercase letter followed by CamelCase. Identifiers should not be start with \$. The compile uses this for some files.
+
+\section{Understanding default initialisation of variables}
+
+A local variable is a variable defined within a method. They must be initialised before the are used. They do not have a default values and contain garbage data until initialised. The compile will not let you read in an uninitialised value.
+
+\begin{lstlisting}
+public int notValid() {
+	int y = 10;
+	int x;
+	int reply = x + y; // DOES NOT COMPILE
+	return reply;
+}
+\end{lstlisting}
+
+\section{Instance and Class Variables}
+Variables that are no local variables are known as instance variables or class variables. Instance variables are also called fields. Class variables will typical have the keyword static before it.\\
+Instance and class variables do not require you to initialise them. As soon as they are declared they are given a default value. 
+
+\begin{center}
+\begin{tabular}{| c | c |}
+ \hline
+ Type & Default\\ 
+ \hline
+ boolean & false\\  
+ byte , short , int , long & 0\\  
+ float , double & 0.0\\
+ char & u0000 (NUL)\\
+ All object references & null \\ 
+ \hline
+\end{tabular}
+\end{center}
+
+\section{Understanding variable scope}
+
+This needs to be second nature for the exam.
+
+\begin{list}{•}{•}
+\item Local Variables - in scope from declaration to end of block
+\item Instance Variables - in scope from declaration until object garbage collected 
+\item Class Variables - in scope from declaration until program ends.
+\end{list}
+
+\section{Ordering Elements in a Class}
+
+The rules below must be memorised.
+
+\begin{center}
+\begin{tabular}{| c | c | c | c |}
+ \hline
+ Element & Example & Required? & Where does it go?\\
+ \hline
+ Package declaration & package abc & No & First line in the file\\
+ 
+ Import statements & import java.util.* & No & Immediately after the package\\  
+ Class declaration & public class C & Yes & Immediately after the import\\
+ Field declarations & int value; & No & Anywhere inside a class\\
+ Method declarations & void method() & No & Anywhere inside a class \\ 
+ \hline
+\end{tabular}
+\end{center}
+
+Multiple classes can be present a class but only one of them can be public. Neither has to be public. Inner classes are classes within a class.
+
+\section{Destroying Objects}
+
+Java provides an object which automatically takes care of this. Java objects are stored in a prorams memory heap. This is also refered to as a free store. This represents a large pool of unused memory allocated to your Java application. There is a limit and if objects are always created and left on the heap, eventually it will run out of memory.
+
+\subsection{Garbage Collection}
+
+This refers to automatically freeing memory on the heap by deleting objects that are no longer reachable in your program. For the exam it must be known that System.gc() is not guaranteed to run, and you should be able to recognise when objects become eligible for garbage collection. System.gc() merely suggests that it must be a good time for Java to run garbage collection. Java is free to ignore the request.\\
+
+Java waits until the code no longer needs that memory. An object will remain on the heap until it is no longer reachable. The situation occurs when two things occur
+\begin{list}{•}{•}
+\item The object no longer has any references pointing to it
+\item All references to the object have gone out of scope.
+\end{list}
+
+\section{Objects vs.References}
+
+Reference is a variables that has a name and can be used to access the contents of an object. A reference can be assigned to another reference, passed to a method, or returned from a method. All references are the same size, no matter what their type is.\\
+
+Ano object sits on the heap and does no have a name. Can only access an object through a reference. Objects consume varying amounts of memory. An object cannot be assigned to another object,nor can an object be passed to a method or returned from a method. It is the object that gets garbage collected, not its reference.\\
+
+\section{finalize()}
+
+Java allows objects to implement a method called finalize() that may get called. This method gets called if the garbage collector tries to collect the object. If the collector doesn't get called  the method doesn't get called. If the garbage collector fails to collect the object and tried to run it again later, the method doesn't get called a second time.\\
+
+finalize() is only run when the object is eligible for garbage collection. 
+
+\section{Benefits of Java}
+
+\begin{list}{•}{•}
+\item Object Oriented - Java is an object-orientated language which means all code is defined in classes and most of those classes can be instantiated into objects. Java allows functional programming within a class within a class. 
+
+\item Encapsulation - Java supports access modifiers to protect data from unintended access and modification.
+
+\item Platform Independent - Java is an interpreted language because it gets compiled to byte code. A key benefit is that Java code gets compiled once rather than needing to be recompiled for different operating systems. This is known as "write once, run everywhere".
+
+\item Robust - It prevents memory leaks unlike C++. It has no pointers, no operator overloading.
+
+\item Secure - Java code runs inside the JVM. This creates a sandbox that makes it hard for Java code to do bad things on the PC it runs on.
+
+\end{list}
+
+
+\chapter{Operators and Statements}
+
+\section{Understanding Java Operators}
+
+
+
+\begin{center}
+\begin{tabular}{| c | c |}
+ \hline
+ Operator & Symbols and examples\\
+ \hline
+ Post-unary operators & expression++. expression--\\
+ Pre-unary operators & ++expression, --expression\\
+ Other unary operators & +,-,! \\
+ Multiplications/Division/Modulus & *,/,\% \\ 
+ Addition/Subtraction & +,- \\
+ Shift operators & <<, >>, >> >\\
+ Relational operators & <,>, <=, >=, instanceof \\
+ Equal to/not equal to & ==, != \\
+ Logical operators &  , \\
+ Short -circuit logical operators & \&\& , \\
+ Ternary operators & 
+% \begin{lstlisting}
+% boolean expression?expression1 : expression2 
+% \end{lstlisting}
+\\
+
+ Assignment operators & =,+=,-=,*=,%=,\%=,\& =,^=,!=,<<=,>> = , >> >= 
+ \\
+ \hline
+\end{tabular}
+\end{center}
+
+\section{Working with binary operators}
+Perform mathematical operations on variables, create logical expressions as well as perform basic variable assignments. Typically combined in complex expressions with more than two variables, therefore operator precedence is very important in evaluating expressions.
+
+\subsection{Arithmetic operators}
+
+Precedence can be overwritten with brackets. All arithmetic operators can be applied to any Java Primitives including, except boolean and String. Only + and += can be used on strings which results in string concatenation.\\ The modulus operator is not limited to postive integer values in java. It can be used on negative integers and floating point integers. 
+
+\subsection{Numeric promotion Rules}
+\begin{list}{•}{•}
+	\item If two values have different data types, Java will automatically promote one of the values to the larger of the two data types/
+	\item If one of the values is integral and the other is floating point, Java will automatically promote the integral value to the floating-point value's.
+	\item Smaller data types, namely byte,short and char are first promoted to int any time they're used with a Java binary arithmetic operator, even if nether of the operands is int.
+	\item After all promotion has occurred and the operands have the same data type, the resulting value will have the same data type as its promoted operands.
+\end{list}
+\subsection{Working with Unary operators}
+
+\begin{center}
+\begin{tabular}{| c | c |}
+ \hline
+ Unary operator & Description\\
+ \hline
+ + & Indicates a number is positive. Assumed to be positive in Java anyway\\
+ - & Indicates a literal number is negative or negates an expression\\
+ ++ & Increments a value by 1\\
+ - 1- & decrements a values by 1\\
+ ! & Inverts a Boolean's logical value\\
+ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Increment operators}
+Typically occur before binary operators. There are pre-increment and post increment which behave differently.
+
+\subsection{Using Additional Binary operators}
+
+\subsection{Assignment}
+Java will automatically promote from smaller to larger data types and will throw up a compiler error otherwise. Casting is done when you are going from a larger to a smaller data type, or converting from a floating-point to an integral value.
+
+\subsubsection{Overflow and underflow}
+Overflow, when the number is too large to fit in a data type and underflow is when it is too small.
+
+\subsubsection{Compound Assignment operators}
+
+\begin{lstlisting}
+
+long x = 10;
+int y = 5;
+y = y * x; //Does not compile
+
+long x = 10;
+int y = 5;
+y *= x; //Does compile as it as the int gets cast to a long which then get cast to an int again after the multiplication has taken place.
+
+long x = 5;
+long y = (x=3); //First sets the value of a x to be 3 which then returns a value of the assignment which is also 3.
+System.out.println(x); // Outputs 3
+System.out.println(y); // Outputs 3 also
+
+\end{lstlisting}
+
+\subsection{Relational operators}
+
+\begin{lstlisting}
+
+a instanceof b //True if the reference that a point to is an instance of class, subclass, or class that implemetns a particular interface, as named in b.
+
+\end{lstlisting}
+
+\subsection{Logical operators}
+
+%Logical operators \&, \| and ^, may be applied to both numeric and boolean data types. When they are applied to boolean data types, they are reffered to as logical operators. They perform bitwise comparisons of the bits that compose that number. \\
+
+With short circuit notation the right hand side may never be evaluated if the value of the expressions can be determined form the left hand side.
+
+\subsection{Equality Operators}
+
+== and != return a boolean value whether values are equal or not equal.
+
+\begin{list}{•}{•}
+\item Comparing two numeric primitive types. If they are of different types the values are automatically promoted.
+\item Comparing two boolean values
+\item Comparing two objects, including null and String values.
+\end{list}
+
+These cannot be mixed. With objects there comparison is done on the references to the objects, not the object themselves.\\
+
+Two references are equal if they if and only if they point to the same object, or both point to null.
+
+\section{Understanding Java statements}
+
+Curly braces are optional for single if statements.\\
+
+There ternary operator. This is ?. It looks like.
+
+\begin{lstlisting}
+booleanExpression ? expression1 : expression2
+\end{lstlisting}
+
+The first operand must be a boolean expression, and the second and third can be any expression that returns a value. It can be seen to be a condense d form of the if-then-else statement that returns a value. There is no requirement that the second and third expression in ternary operations have the same data types.If assignment is involved and data types are different they may not compile.
+
+\begin{lstlisting}
+System.out.println((y > 5 ) ? 21 : "Zebra");
+int animal = (y < 91) ? 9 : "Horse"; // Does not compile
+ the second line does not compile as the compiler knows that "Horse" is f the wrong data type and cannot be assigned to an int.
+\end{lstlisting}
+
+Side-effects in a ternary operator may or may not be applied. This is similar to java short circuit operators.
+
+\begin{lstlisting}
+int y = 1;
+int z = 1;
+final int x = y<10 ? y++ : z++;
+System.out.println(y+","+z); outputs 2,1
+\end{lstlisting}
+
+\begin{lstlisting}
+int y = 1;
+int z = 1;
+final int x = y>=10 ? y++ : z++;
+System.out.println(y+","+z); outputs 1,2
+\end{lstlisting}
+
+\subsection{The switch statement}
+Types supported by a switch statement
+\begin{list}{•}{•}
+\item int and Integer
+\item byte and Byte
+\item short and Short
+\item char and Character 
+\item int and Integer
+\item String
+\item enum values
+\end{list}
+
+\subsection{Compile-Time Constant Values}
+
+The values in each case statement must be compile-time constant values of the same data type as the switch value. This mean you can use only literals, enum constants, or final constant variables of the same data type. By final constant, we mean that the variable must be marked with the final modifier and initialised with a literal value in the same expression in which it is declared.
+
+\begin{lstlisting}
+int dayOfWeek = 5;
+
+switch(dayOfWeek) {
+	default:
+		System.out.println("Weekday");
+		break;
+	case 0:
+		System.out.println("Sunday");
+		break;
+	case 6:
+		System.out.println("Saturday");
+		break;
+\end{lstlisting}
+
+Things to notice. There is a break statement at the end of each case and default section. They terminate the switch statement and return flow to the control to the enclosing statement. If the break statement is missing, flow will continue to the next proceeding case or default block automatically.\\
+The default block does not have to be at the end of the break statement. \\ Order only matters if there are gonig to be multiple pathwasy through the switch statment. The data type of the case satements must match the data type of the switch statments.\\ A return can be used liek a break statement to exit the switch statment early. 
+
+\begin{lstlisting}
+private int getSortOrder(String firstName, final String lastName) {
+	
+	String middleName = "Patricia";
+	final String suffix = "JR";
+	int id =0;
+	
+	switch(firstname) {
+		case "Test":
+			return 52;
+		case middleName: // DOES NOT COMPILE middleNAME is not a final variable
+			id = 5;
+			break;
+		case suffix:
+			id = 0;
+			break;
+		case lastName: // DOES NOT COMPILE Despite being final it is not constant as it is being pass to the function. This line does not compile well. 
+			id = 8;
+			break;
+		case 5: // DOES NOT COMPILE
+			id = 7;
+			break;
+		case 'J': //DOES NOT COMPILE
+			id = 10;
+			break;
+		case java.time.DayOfWeek.SUNDAY: //DOES NOT COMPILE
+			id=15;
+			break; //The three cases above do not compile as they are not of a string type.
+		}
+		return id;
+	}
+	
+	
+\end{lstlisting}
+
+\subsection{The for each loop}
+This loop is specifically designed for iterating over arrays and Collection object. Also known as the for-each loop.
+
+\subsection{Understanding Advanced Flow Control}
+
+\subsubsection{Adding Optional Labels}
+
+A label is an optional pointer to the head of a statment that allows the application flow to jump to it or break from it. It is a single word that is proceeded by a colon (:).
+
+\begin{lstlisting}
+int [][] myComplexArray = {{5,2,1,3},{3,9,8,9},{5,7,12,7}};
+OUTER_LOOP: for(int[] mySimpleArray : myComplexArray) 
+	{
+	INNER_LOOP: for(int i=0; i<mySimpleArray>; i++)
+			{
+				System.out.print(mySimpleArray[i]+"\t");
+			}
+		System.out.println();
+	}
+\end{lstlisting}
+
+Optional labels are only used in loop structures and are useful in nested environments. Formatting rules are the same rules for identifiers. Commonly expressed with underscores between words to distinguish them from regular variables.
+
+\subsubsection{The break statement}
+
+This statement transfers flow of control out to the enclosing statement.
+
+\subsubsection{The continue statement}
+
+This statement causes flow to finish the execution of the current loop. Control is transferred to the boolean expression that determines if the loop should continue. The continue statement is also applied to the nearest inner loop under execution using optional label statements to override this behaviour.
+
+\chapter{Core Java APIs}
+
+\subsection{Creating and Manipulating Strings}
+
+The string class is an example of a reference type. Reference types are created using the new keyword. 
+
+\begin{lstlisting}
+String name = "Fluffy";
+String name = new String("Fluffy"); //Both of these will create the string.
+\end{lstlisting}
+
+Both give you a reference variable of type name pointing to the String object "Fluffy". The String class is special and doesn't need to be instantiated with new.
+
+
+\subsection{Concatenation}
+
+\begin{list}{•}{•}
+\item If both operands are numeric, + means numeric addition.
+\item If either operand is a String, + means concatenation.
+\item The expression is evaluated left to right.
+\end{list}
+
+\begin{lstlisting}
+	System.out.println(1 + 2); //3
+	System.out.println("a" + "b"); //ab
+	System.out.println("a" + "b" + 3); //ab3
+	System.out.println(1 + 2 + "c"); //3c
+	
+	String s = "1"; //s currently holds "1"
+	s += "2"; // s currently holds "12"
+	s += 3; //s currently holds "123"
+	System.out.println(s);	// 123
+\end{lstlisting}
+
+\subsection{Immutability}
+
+Once a String is created, it is not allowed to change. I cannot be made larger or smaller. The characters inside cannot be changed inside of it.
+
+\subsection{The String Pool}
+
+Java realises that many strings are re-used in applications and solves this problem by reusing the commons ones.The string pool, also known as the intern pool, is a location in the Java virtual machine (JVM) that collects all these strings.
+
+String pool contains literal values that appear in your program."name" is a literal and therefore goes into the string pool. myObject.toString() is a string by not a literal, so it does not go into a string pool. String not in the string pool are garbage collected just like any other object.
+
+\subsection{Important String Methods}
+
+\begin{lstlisting}
+	String string = "animals";
+	System.out.println(string.length()); //7
+	
+	char charAt(int index)
+	
+	String string = "animals"
+	System.out.println(string.charAt(0)); // a
+	System.out.println(string.charAt(6)); // s
+	System.out.println(string.charAt(7)); // throws exception
+	
+	int indexOf(char ch)
+	int indexOf(char ch, index fromIndex)
+	int indexOf(String str)
+	int indexOf(String str, index fromIndex)
+	
+	String string = "animals";
+	System.out.println(string.indexOf('a')); \\ 0 
+	System.out.println(string.indexOf("al")); \\ 4
+	System.out.println(string.indexOf('a', 4)); \\ 4
+	System.out.println(string.indexOf("al", 5)); \\ -1
+	
+	int substring(int beginIndex)
+	int substring(int beginIndex, int endIndex)
+	
+	String string = "animals";
+	System.out.println(string,substring(3)); // mals
+	System.out.println(string.substring(string.indexOf('m'))); // mals
+	System.out.println(string.substring(3, 4)); // m
+	System.out.println(string.substring(3, 7)); // mals
+	
+	System.out.println(string.substring(3, 3)); //empty string
+	System.out.println(string.substring(3, 2)); //throws exception
+	System.out.println(string.substring(3, 8)); //throws exception
+	
+	String toLowerCase(String str)
+	String toUpperCase(String srt)
+	
+	String string = "animals";
+	System.out.println(string.toUpperCase()); // ANIMALS
+	System.out.println("Abc123".toLowerCase()); //abc123
+	
+	boolean equals(String str)
+	boolean equalsIgnoreCase(String str)
+	
+	System.out.println("abc".equals("ABC")); // false
+	System.out.println("ABC".equals("ABC")); //true
+	System.out.println("abc".equalsIgnoreCase("ABC")); // true
+
+	boolean startsWith(String prefix)
+	boolean endsWith(String suffix)
+	
+	System.out.println("abc".startWith("a")); // true
+	System.out.println("abc".startWith("A")); // false
+	System.out.println("abc".endsWith("c")); // true
+	System.out.pritnln("abc".endsWith("a")); // false
+
+	boolean contains(String str)
+	
+	System.out.println("abc".contains("b")); // true
+	System.out.println("abc".contains("B")); // false
+	
+	String replace(char oldChar, char newChar)
+	String replace(CharSequence oldChar, CharSequence newChar)
+	
+	System.out.println("abcabc".replace('a', 'A')); // AbcAbc
+	System.out.println("abcabc".replace("a", "A")); // AbcAbc
+	
+	public String trim()
+	
+	System.out.println("abc".trim()); // abc
+	System.out.println("\t a b c\n".trim()); // a b c
+	
+	//Method Chaining
+	
+	String start = "AniMal       ";
+	String trimmed = start.trim(); //"AniMaL"
+	String lowercase = trimmed.toLowerCase(); //"animal"
+	String result = lowercase.replace('a', 'A'); //Animal
+	System.out.println(result);
+	
+\end{lstlisting}
+
+\subsection{Using the StringBulider Class}
+Creates a String without storing all those interim String values. Unlike the String class, StringBuilder is not immutable.
+
+\subsubsection{Mutability and Chaining}
+
+When chainign String method calls, the result was a new String with the answer. Chaining StringBuilder objects doesn't work this way. Instead, the StringBuilder changes its own state and returns a reference to itself.
+
+\begin{lstlisting}
+	StringBuilder sb = new StringBuilder("start");
+	sb.append("+middle"); // sb = "start+middle"
+	StringBuilder same = sb.append("+end");  "start+middle+end"
+
+\end{lstlisting}
+
+The second line in the example returns a reference to sb as well as adding a line to the end of sb. The reference is ignored. Line 6 also adds text to the end of sb and returns a reference to sb. This time the reference is stored in, same which means sb and same point to the exact same object and would print out the same value.
+
+\subsection{Creating a StringBuilder}
+
+\begin{lstlisting}
+
+StringBuilder sb1 = new StringBuilder();
+StringBuilder sb1 = new StringBuilder("animal");
+StringBuilder sb1 = new StringBuilder(10); //reserve a number of slots for the string
+
+\end{lstlisting}
+
+\subsection{Important StringBuilder Methods}
+
+charAt(), indexOf(), length() and substring() work exactly like the same as in the String class.\\
+
+append() - adds the parameter to the StringBuilder and returns a reference to the current StringBuilder. This method has multiple method signatures. They all look similar but the take different data types as parameters.
+
+\begin{lstlisting}
+
+StringBuilder append(String str)
+
+\end{lstlisting}
+
+insert() - adds characters to the StringBuilder at the requested index and returns a current StringBuilder. Just like append().
+
+\begin{lstlisting}
+
+StringBuilder sb = new StringBuilder("animals";
+sb.insert(7, "-"); // sb = animals-
+sb.insert(0, "-"); // sb = -animals-
+sb.insert(4, "-"); // sb = -ani-mals-
+System.out.println(sb);
+
+\end{lstlisting}
+
+delete() and deleteCharAt(). It removes characters from the sequence and retuns a reference to the current StringBuilder. The deleteCharAt() method is convenient when you want to delete only one character.
+
+\begin{lstlisting}
+
+StringBuilder delete(int start, int end)
+StringBuilder deleteCharAt(int index)
+
+\end{lstlisting}
+
+reverse() - It reverses the characters in the sequences and returns a reference to the current StringBuilder.\\
+
+toString() - StringBuilder() is used internally for performance purposes but the end result need to be a String such as when passing a parameter.
+
+\subsection{StringBuilder vs. StringBuffer}
+
+When writing code which concatenates a lot of String objects together, you should use StringBuilder StringBuffer does the same thing but is threadsafe.
+
+\subsection{Understanding Equality}
+
+\begin{lstlisting}
+
+StringBuilder one = new StringBuilder();
+StringBuilder two = new StringBuilder();
+StringBuilder three = one.append("a);
+System.out.println(one == two); // false
+System.out.println(one == three); // true
+
+\end{lstlisting}
+
+StringBuilder methods like to return the current reference for chaining.
+
+\begin{lstlisting}
+
+String x = "Hello World";
+String y = "Hello World";
+System.out.println(x == y); //true
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+String x = "Hello World";
+String z = " Hello World".trim();
+System.out.println(x.equals(z)); // true
+
+\end{lstlisting}
+
+\begin{lstlisting}
+
+String x = "Hello World";
+String z = " Hello World".trim();
+System.out.println(x.equals(z)); // true
+
+\end{lstlisting}
+
+never use == to compare string objects.\\
+
+Ideally want logical equality instead of rather than object equality for String objects. The authors of the String class have implemented a standard method called equals to check the values insidethe String rather than the String iteslf.\\
+
+If a class doesn't have an equals method, Java determines whether the references point to the same object which is exactly what == does.If you call .equals() on two StringBuilder instances, it will check references equality. Important to realise what .equals defaults to.
+
+\subsection{Understanding Java Arrays}
+
+String and StringBuilder classes are implemented using an array of characters. An array is an area of memory on the heap with space for designated number of elements. A String is implemented as an array with some methods that you might want to use when dealing with characters specifically. A StringBuilder is implemented as an array where the array object is replaces with a new bigger array object when it runs out of space to store all the characters. An array can be any other Java type.
+
+\subsection{Creating an Array of Primitives}
+\begin{lstlistings}
+	int[] numbers1 = new int[3];
+\end{lstlistings}
+
+When using this form to instantiate an array, all elements are set to the default value for that type. indexes startup from 0.
+
+\begin{lstlistings}
+	int[] numbers2 = new int[] {42. 55. 99};
+\end{lstlistings}
+
+\begin{lstlistings}
+	int[] numbers = {42. 55. 99};
+\end{lstlistings}
+
+This is called an anonymous array. It is anonymous because you don't specify the type and size.
+
+All four of the following statements do the same thing.
+
+\begin{lstlistings}
+	int[] numAnimals;
+	int [] numAnimals;
+	int numAninmals[];
+	int numAninmals4 [];
+\end{lstlistings}
+
+\subsubsection{Multiple "Arrays" in Declarations}
+
+\begin{lstlisting}
+	int[] ids, types; //Creates two variables of int[]
+	int ids[], types; //this creates a int variables and an array of ints
+\end{lstlisting}
+
+\subsection{Creating an Array with Reference Variables}
+
+\begin{lstlisting}
+	public class ArrayType {
+		public static void main(Stringargs[]) {
+			String [] bugs { "cricket", "beetle", "ladybug" };
+			String [] alias = bugs;
+			System.out.println(bugs.equals(alias)); //true
+			System.out.println(bugs.toString()); //
+		}
+	}
+\end{lstlisting}
+
+
+\begin{lstlisting}
+	Strign[] strings = { "stringValue" };
+	Object[] objects = strings;
+	String[] againStrings = (String[]) objets;
+	againStrings[0] = new StringBuilder(); //DOES NOT COMPILE
+	objects[0] = new StringBuilder(); //careful!
+\end{lstlisting}
+
+\subsection*{Sorting}
+
+\begin{lstlisting}
+import java.util.*         // import whole package including Arrays
+import java.util.Arrays;   // import just Arrays
+
+can also be specified java.util.Arrays wherever an array is needed.
+
+\end{lstlisting}
+
+\subsection{Varargs}
+
+\begin{lstlisting}
+public static void main(String[] args)
+public static void main(String args[])
+public static void main(String... args) // varargs
+\end{lstlisting}
+
+\subsection{Multidimensional Arrays}
+
+Arrays are objects and can be objects. Arrays can hold other arrays.
+
+\begin{lstlisting}
+int[][] vars1;  // 2D array
+int vars2 [][]; // 2D array
+int[] vars3
+\end{lstlisting}
+
+\subsection{Understanding an ArrayList}
+
+Just like StringBuilder and Arraylist can change size at runtime as needed. Like an array, an ArrayList is an ordered sequence that allows duplicates.
+
+\begin{lstlisting}
+ArrayList list1 = new ArrayList(); // containts space with default size
+ArrayList list2 = new ArrayList(10); // Specific number of slots but dont assign anything
+ArrayList list3 = new ArrayList(list2); // this makes a copy of another array list, namely list 2.
+// using generics
+
+ArrayList<String> list4 = new ArrayList<String>();
+ArrayList<String> list5 = new ArrayList<>();
+\end{lstlisting}
+
+ArrayList implements an interface called List. i.e ArrayList is a List. You can store an ArrayList in a List reference variable but not vice versa. This is because list is an interface and interfaces cannont be instantiated.
+
+\subsection{Using an ArrayList}
+
+E is the name of a class. E is used by convention in generics to mean "any class that this array can hold." If this isn't specified when createing the array list then E means object. Otherwise it means the class you put between the class you put between < and >.
+
+ArrayList implements toString(), can easily see the contents just by printing it. Arrays do not.
+
+\subsection{add()}
+
+This method inserts a new value in the ArrayList.
+
+\begin{lstlisting}
+boolean add(E element)
+void add(int index, E element)
+\end{lstlisting}
+
+The boolean value always returns true. Other classes in the collection in the collections family need a return value in the signature when adding an element.
+
+\begin{lstlisting}
+// This is hwo to specify to java that we want an arraylist of only String
+ArrayList<String> safer = new ArrayList<>();
+safer.add("sparrow");
+safer.add(Boolean.TRUE) // Does not compile
+
+\end{lstlisting}
+
+\subsection{remove()}
+
+The remove() methods remove the firs matching value in the ArrayList or remove the element at a specified index. The signatures are as follows:
+
+\begin{lstlisting}
+boolean remove(Object object)
+E remove(int index)
+\end{lstlisting}
+
+There is also a removeIf() statement.
+
+\subsection{set()}
+
+\begin{lstlisting}
+E set(int index, E newElement)
+//This changes the element in array list without changing the size
+\end{lstlisting}
+
+\subsection{isEmpty() and size()}
+
+\begin{lstlisting}
+boolean isEmpty()
+int size()
+\end{lstlisting}
+
+\subsection{clear()}
+
+\begin{lstlisting}
+void clear() this removes all elements and brings us back to an empty ArrayList
+\end{lstlisting}
+
+\subsection{contains()}
+
+This checks whether a certain value is in the ArrayList.
+
+\begin{lstlisting}
+boolean contains(Object object)
+\end{lstlisting}
+
+\subsection{equals()}
+
+This can compare two lists and see if they containt the same elements in the same order.
+
+\begin{lstlisting}
+boolean contains(Object object)
+\end{lstlisting}
+
+\section{Wrapper Classes}
+
+Each primitive has a wrapper class, which is an object ytpe that corresponsds to the primitive. They also have a method that converst back to a primiteve.\\
+
+
+\begin{center}
+\begin{tabular}{| c | c | c |}
+Primitive type & Wrapper Class & Example of constructing\\
+boolean & Wrapper Class & Example of constructing\\
+short\\
+int\\
+long\\
+float & Float\\
+double & Double\\
+char & Character\\
+\end{tabular}
+\end{center}
+
+Methods for converting a string to a primitive of wrapper class.
+
+\begin{lstlisting}
+int primitive = Integer.parseInt("123");
+Integer wrapper = Integer.valueOf("123);
+\end{lstlisting}
+
+If the string passed in is not valid for the given type, Java throws an exception. Character is not involved in this as the Character class doesnt use the parse/valueOf methods. since a String is made up of characters. charAt() can be called normally.
+
+\begin{center}
+\begin{tabular}{| c | c | c |}
+Primitive type & Wrapper Class & Example of constructing\\
+boolean & Wrapper Class & Example of constructing\\
+short\\
+int\\
+long\\
+float & Float\\
+double & Double\\
+char & Character\\
+\end{tabular}
+\end{center}
+
+\section{Autoboxing}
+
+Autoboxing removes the need to be concerned with whether the returned type is a primitve or a Wrapper object. A null reference can be assigned to any reference variable. That null can be unboxed to be a primitive, however calling a method on a Null will return a NullPointerException. 
+
+\section{Converting between array and List}
+
+\begin{lstlisting}
+List<String> list = new ArrayList<>();
+list.add("hawk");
+list.add("robin");
+Object[] objectArray = list.toArray();
+System.out.println(objectArray.length); // 2
+String[] stringArray = list.toArray(new String[0]);
+System.out.println(stringArray.length); // 2
+\end{lstlisting}
+
+ArrayList knows how to convert itself to an array. The problem is that it defaults to an array of class Obejct. A larger array can be used instead. If the arraylist fits in that array it will be retuned. Otherwise a new one will be created.\\
+
+Converting from an array to a List is more intersting. The origonal array and created array backed list are linked. When a change is made to one, it is available in the other. It is a fixed-size list known as a backed List. The array changes with the list.
+
+\begin{lstlisting}
+String[] array = { "hawk", "robin" }; //[hawk, robin]
+List<String> list = Arrays.asList(array); // returns fixed size list
+System.out.println(list.size()); // 2
+list.set(1, "test") // [hawk, test]
+array[0] = "new"; // [new, test]
+for (String b = : array) System.out.println(b + " "); // new test
+list.remove(1); // throws UnsupportedOperation Exception
+\end{lstlisting}
+
+\subsection{Sorting}
+
+Same as an array but different helper class.
+
+\begin{lstlisting}
+List<Integer> numbers = new ArrayList<>();
+numbers.add(99);
+numbers.add(5);
+numbers.add(81);
+Collection.sort(numbers);
+System.out.println(numbers);[5, 81, 99]
+\end{lstlisting}
+
+
+\section{Working with Dates and Times}
+
+Need an import statment to work with the date and time classes.
+
+\begin{lstlisting}
+import java.time.*;  // import time classes
+\end{lstlisting}
+
+\subsection{Creating Dates and Times}
+
+When working with dates and times, decide how much information is needed. Three choices.
+\begin{list}{•}{•}
+\item LocalDate Contains just a date - no time and no time zone.
+\item LocalTime Contains just a time - no date and no time zone.
+\item LocalDateTime Contains both a date and time but no time zone. 
+\end{list}
+
+Timezones should be avoided if possible. Jave uses T to separate the date and time when converting LocalDateTime to a String.
+
+\begin{lstlisting}
+public static LocalDate of(int year, int month, int dayOfMonth)
+public static LocalDate of(int year, Month month, int dayofMonth)
+\end{lstlisting}
+
+Month is a type of enum and can be treated as a constant. For month in the new date and time methods the numbering begins at one. Constructors are not used with dates. You cannot construct a date object directly.
+
+\subsection{Manipulating Dates and Times}
+
+Date and time classes are immutable, just like String was. This means that we need to remember to assign the results of these methods to a reference variable so that they are not lost. When working with immutable types pay attention and make sure that the value of a method call isn't ignored.
+
+\subsection{Working with periods}
+
+Five ways to create a period class.
+
+\begin{lstlisting}
+Period annually = Period.ofYears(1); // every 1 year
+Period quarterly = Period.ofMonths(3); // every 3 months
+Period everyThreeWeeks = Period.ofWeeks(3); // every 3 weeks
+Period everyOtherDay = Period.ofDays(2); // every 2 days
+Period everyYearAndAWeek = Period.of(1, 0 ,7); every year and 7 days
+
+\end{lstlisting}
+
+You cannot chain methods when creating a Period. 
+
+\begin{lstlisting}
+Period wrong = Period.ofYears(1).ofWeeks(1); //  every week
+\end{lstlisting}
+
+\begin{lstlisting}
+Period wrong = Period.ofYears(1);
+wrong = Period.ofWeeks(7);
+\end{lstlisting}
+
+Period is a duration of a day or more, Duration alloaws for smaller units of time.
+
+\subsection*{Formatting Dates and Times}
+
+Java has a class called DateTimeFormatter. It can be used to formate any type of date and/or time object. this is in the package java.time.format.
+
+\subsection{Tabl of date methods}
+
+\subsection{Parsing Dates and Times}
+
+The parse() method take a formatter as well. If non is specified it uses the default for that type.
+
+\begin{lstlisting}
+DateTimeFormatter f = DateTimeFormatter.ofPattern("MM dd yyyy");
+LocalDate date = LocalDate.parse("01 02 2015", f);
+LocalTime time = LocalTime.parse("11:22");
+System.out.println(date); // 2015-01-02
+System.out.println(time); // 11:22
+\end{lstlisting}
+
+\chapter{Methods and Encapsulation}
+
+\chapter{Class Design}
+
+\chapter{Exceptions}
